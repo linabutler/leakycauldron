@@ -35,12 +35,13 @@ interface JaxrsAppProcessor {
 class SwaggerInitializer
     @Inject
     constructor(
-        val contextId: String =
-            OpenApiContext.OPENAPI_CONTEXT_ID_PREFIX + "servlet." +
-                OpenApiServlet::class.simpleName,
         val appConfig: TribeApplicationConfig,
         val objectMapper: ObjectMapper,
     ) : JaxrsAppProcessor {
+        /** The context ID that [OpenApiServlet] uses. Exposed for testing. */
+        var contextId: String =
+            OpenApiContext.OPENAPI_CONTEXT_ID_PREFIX + "servlet." + OpenApiServlet::class.simpleName
+
         override fun process(application: Application) {
             ModelConverters.getInstance().addConverter(ModelResolver(objectMapper))
             val hostAndPath = UriBuilder.newInstance().host(appConfig.corsDomains[0]).path(appConfig.appContextPath)

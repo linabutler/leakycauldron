@@ -27,10 +27,9 @@ class SwaggerInitializerTest {
     fun testInlineClassPropertyNames() {
         val initializer =
             SwaggerInitializer(
-                "testInlineClassPropertyNames",
                 TribeApplicationConfig(ConfigLoader()),
                 ObjectMapperProvider().get(),
-            )
+            ).apply { contextId = "testInlineClassPropertyNames" }
         initializer.process(object : Application() {})
         val schemas = ModelConverters.getInstance().read(ModelWithInlineClass::class.java)
         val schema = schemas["ModelWithInlineClass"]
@@ -42,10 +41,9 @@ class SwaggerInitializerTest {
     fun testServerUrlsForCustomAppContextPath() {
         val initializer =
             SwaggerInitializer(
-                "serverUrlsForCustomAppContextPath",
                 TribeApplicationConfig(ConfigLoader("appContextPathTestCase")),
                 ObjectMapperProvider().get(),
-            )
+            ).apply { contextId = "serverUrlsForCustomAppContextPath" }
         initializer.process(object : Application() {})
         val context = OpenApiContextLocator.getInstance().getOpenApiContext("serverUrlsForCustomAppContextPath")
         assertThat(context.read().servers.map { it.url }).isEqualTo(
